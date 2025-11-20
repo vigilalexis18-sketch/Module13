@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Stock Prices{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            
+            <div class="card calculator-card border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">🧮 Simple Calculator</h2>
+                </div>
+                <div class="card-body">
+                    
+                    {% if error %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="mb-4 p-3 text-end bg-light border rounded">
+                        <h1 class="display-4 mb-0" id="result-display">
+                            {% if result is not none %}
+                                **{{ result }}**
+                            {% else %}
+                                0
+                            {% endif %}
+                        </h1>
+                        <small class="text-muted">Current Result</small>
+                    </div>
+
+                    <form method="POST" action="{{ url_for('calculator') }}">
+                        <div class="row g-3">
+                            <div class="col-md-5">
+                                <label for="num1" class="form-label">First Number</label>
+                                <input type="number" 
+                                       step="any" 
+                                       name="num1" 
+                                       class="form-control" 
+                                       id="num1" 
+                                       placeholder="Enter number" 
+                                       required>
+                            </div>
+
+                            <div class="col-md-2">
+                                <label for="operator" class="form-label">Op</label>
+                                <select name="operator" class="form-select" id="operator" required>
+                                    <option value="add" selected>+</option>
+                                    <option value="subtract">-</option>
+                                    <option value="multiply">×</option>
+                                    <option value="divide">÷</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-5">
+                                <label for="num2" class="form-label">Second Number</label>
+                                <input type="number" 
+                                       step="any" 
+                                       name="num2" 
+                                       class="form-control" 
+                                       id="num2" 
+                                       placeholder="Enter number" 
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                Calculate
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card mt-4 calculator-card">
+                <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">History</h4>
+                    <form method="POST" action="{{ url_for('calculator') }}" class="m-0">
+                        <button type="submit" name="clear" value="1" class="btn btn-sm btn-outline-light">
+                            Clear History
+                        </button>
+                    </form>
+                </div>
+                <div class="card-body history-list p-0">
+                    <ul class="list-group list-group-flush">
+                        {% if history %}
+                            {% for entry in history | reverse %} 
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span class="text-muted small">
+                                        {{ loop.revindex }}. 
+                                    </span>
+                                    <span class="fw-bold">
+                                        {{ entry.num1 }} {{ entry.operator_symbol }} {{ entry.num2 }} 
+                                    </span>
+                                    <span class="badge bg-primary rounded-pill">= {{ entry.result }}</span>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="list-group-item text-center text-muted py-3">
+                                No calculations yet.
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

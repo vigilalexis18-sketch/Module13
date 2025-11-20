@@ -1,0 +1,15 @@
+# Ignore a specific file
+secret-key.json
+my_private_notes.txt
+
+# Ignore a folder and everything inside it
+private/
+logs/
+
+# Ignore all files with a certain extension
+*.env
+*.log
+
+# Ignore everything in a folder but still track the folder itself
+private/*
+!private/.keep   # optional: create an empty .keep file if you want the folder to exist

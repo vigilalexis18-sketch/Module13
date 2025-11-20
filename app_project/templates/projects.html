@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}Stock Prices{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            
+            <div class="card project-card border-success">
+                <div class="card-header bg-success text-white">
+                    <h2 class="mb-0">📋 Projects Manager</h2>
+                </div>
+                <div class="card-body">
+                    
+                    {% if error %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </div>
+                    {% endif %}
+                    
+                    {% if message %}
+                        <div class="alert alert-success" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+
+                    <h5 class="mt-3">Add New Project (Max 3)</h5>
+                    <form method="POST" action="{{ url_for('projects') }}" class="mb-4">
+                        <div class="input-group">
+                            <label for="project_name" class="visually-hidden">Enter a project name:</label>
+                            <input type="text" 
+                                   name="project_name" 
+                                   id="project_name"
+                                   class="form-control" 
+                                   placeholder="Enter a project name (max 100 characters)" 
+                                   maxlength="100"
+                                   required>
+                            <button type="submit" 
+                                    name="add_project" 
+                                    class="btn btn-success"
+                                    {% if projects|length >= 3 %}disabled{% endif %}>
+                                Add Project
+                            </button>
+                        </div>
+                        {% if projects|length >= 3 %}
+                            <small class="text-danger">Maximum project limit reached (3).</small>
+                        {% endif %}
+                    </form>
+                    
+                    <hr>
+                    
+                    <h5 class="mb-3">Current Projects ({{ projects|length }})</h5>
+                    <div class="list-box border rounded p-0">
+                        {% if projects %}
+                            <ul class="list-group list-group-flush">
+                                {% for project in projects %} 
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        
+                                        <div class="flex-grow-1 me-2">
+                                            <form method="POST" action="{{ url_for('projects') }}" class="d-flex">
+                                                <input type="hidden" name="update_index" value="{{ loop.index0 }}">
+                                                <input type="text" 
+                                                       name="updated_name" 
+                                                       value="{{ project }}"
+                                                       class="form-control form-control-sm me-2"
+                                                       maxlength="100"
+                                                       required>
+                                                <button type="submit" 
+                                                        name="update_project" 
+                                                        class="btn btn-sm btn-outline-info">
+                                                    Update
+                                                </button>
+                                            </form>
+                                        </div>
+                                        
+                                        <form method="POST" action="{{ url_for('projects') }}" class="m-0">
+                                            <input type="hidden" name="delete_index" value="{{ loop.index0 }}">
+                                            <button type="submit" 
+                                                    name="delete_project" 
+                                                    class="btn btn-sm btn-outline-danger">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-center text-muted py-3 m-0">
+                                No projects saved yet.
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+          
+
+        </div>
+{% endblock %}
